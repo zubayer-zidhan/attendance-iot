@@ -2,10 +2,10 @@
 #define WIFI_MANAGER_H
 
 #include <ESP8266WiFi.h>
-#include "config.h" // Include secrets.h for Wi-Fi credentials
+#include "config.h"
 
 void initializeWiFi() {
-  Serial.println();
+  // Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
 

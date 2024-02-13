@@ -4,15 +4,21 @@
 #include "nfc_reader.h"
 #include "http_client.h"
 
+HTTPClientWrapper httpClient; // Instantiate HTTPClientWrapper
+
 void setup() {
     // Initialize serial communication
-    Serial.begin(115200);
+    Serial.begin(921600);
 
     // Initialize Wi-Fi
     initializeWiFi();
 
     // Initialize NFC reader
     initializeNFCReader();
+
+    // Send GET request to server
+    httpClient.sendRequest("/get");
+
 }
 
 void loop() {
@@ -23,5 +29,5 @@ void loop() {
     readNFCData();
 
     // Send data to server
-    sendDataToServer();
+    // sendDataToServer();
 }

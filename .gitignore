@@ -1,8 +1,10 @@
 # Prerequisites
 *.d
 
-# Config file
+# Sensitive Data files
 config.h
+uid_roll_map.h
+
 
 # Object files
 *.o
