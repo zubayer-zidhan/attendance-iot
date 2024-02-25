@@ -1,5 +1,6 @@
 #include <SPI.h>
 #include <MFRC522.h>
+#include "http_client.h"
 #include "uid_roll_map.h"
 
 #include <unordered_map>
@@ -9,6 +10,7 @@
 #define RST_PIN D3  // Define the reset pin
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
+HTTPClientWrapper httpClient; // Instantiate HTTPClientWrapper
 
 void initializeNFCReader() {
   SPI.begin();         // Initiate SPI bus
@@ -38,8 +40,12 @@ void readNFCData() {
     auto it = uidToRollNumberMap.find(uidStdString);
     if (it != uidToRollNumberMap.end()) {
       // Print corresponding roll number
+      String rollNumber = it->second.c_str();
       Serial.print("Roll number: ");
-      Serial.println(it->second.c_str());
+      Serial.println(rollNumber);
+
+      // Send attendance data to server
+      httpClient.sendAttendanceDataToServer(rollNumber);
     } else {
       Serial.println("Roll number not found for this UID");
     }

@@ -3,22 +3,34 @@
 
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
-#include "config.h" // Include config.h for configuration parameters
+#include "config.h"
 
 class HTTPClientWrapper {
 public:
   HTTPClientWrapper() {}
 
-  void sendRequest(const String& endpoint) {
+  void sendAttendanceDataToServer(const String& id) {
     HTTPClient http;
     WiFiClient client;
+    
+    // Construct the Authorization header
+    String authHeader = "Bearer " + String(bearerToken);
 
-    Serial.print("Connecting to server: ");
-    Serial.println(serverUrl);
+    if (http.begin(client, serverUrl + publishAttendanceEndpoint)) {
+      Serial.print("Connecting to server: ");
+      Serial.println(serverUrl + publishAttendanceEndpoint);
 
-    if (http.begin(client, serverUrl + endpoint)) {
-      int httpResponseCode = http.GET();
 
+      // Add the Authorization header and Content-Type header
+      http.addHeader("Authorization", authHeader.c_str());
+      http.addHeader("Content-Type", "application/json"); // Set content type to JSON
+
+      // Format the request body
+      String requestBody = "{\"studentID\": \"" + String(id) + "\"}";
+
+
+      // Send the POST request
+      int httpResponseCode = http.POST(requestBody); // Send POST request with request body
       if (httpResponseCode > 0) {
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
