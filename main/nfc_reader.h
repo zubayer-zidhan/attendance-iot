@@ -16,7 +16,6 @@ void initializeNFCReader() {
   SPI.begin();         // Initiate SPI bus
   Serial.println("SPI begun");
   mfrc522.PCD_Init();  // Initiate MFRC522
-  Serial.println("Scan your RFID card...");
 }
 
 void readNFCData() {
@@ -45,7 +44,7 @@ void readNFCData() {
       Serial.println(rollNumber);
 
       // Send attendance data to server
-      httpClient.sendAttendanceDataToServer(rollNumber);
+      // httpClient.sendAttendanceDataToServer(rollNumber);
     } else {
       Serial.println("Roll number not found for this UID");
     }

@@ -2,59 +2,30 @@
 #include <MFRC522.h>
 #include "wifi_manager.h"
 #include "nfc_reader.h"
-// #include "websocket_connector.h"
+#include "websocket_connector.h"
 
 
-// HTTPClientWrapper httpClient; // Instantiate HTTPClientWrapper
+// Declare webSocketClient and signalFlag as extern
+bool signalFlag;
 
-
-// const char* webSocketServerAddress = "192.168.1.15";
-// const uint16_t webSocketServerPort = 80;
-
-
-// void connectToWebSocket() {
-//     Serial.println("Connecting to WebSocket server...");
-//     webSocket.begin(webSocketServerAddress, webSocketServerPort, "/ws");
-//     webSocket.onEvent(webSocketEvent);
-// }
-
-
-// void subscribeToTopic(const char* topic) {
-//     String subscribeMessage = "{\"action\":\"subscribe\",\"topic\":\"" + String(topic) + "\"}";
-//     webSocket.sendTXT(subscribeMessage);
-// }
-
-
-// void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
-//     switch(type) {
-//         case WStype_DISCONNECTED:
-//             Serial.println("Disconnected from WebSocket server");
-//             break;
-//         case WStype_CONNECTED:
-//             Serial.println("Connected to WebSocket server");
-//             break;
-//         case WStype_TEXT:
-//             Serial.print("Received message: ");
-//             Serial.println((char*)payload);
-//             break;
-//     }
-// }
+// Declare a previous value flag
+bool previousSignalFlag = false;
 
 
 void setup() {
     // Initialize serial communication
     Serial.begin(921600);
 
+    signalFlag = false;
+
     // Initialize Wi-Fi
     initializeWiFi();
 
 
     // Connect to WebSocket server
-    // connectToWebSocket();
-    // delay(2000); // Delay to allow WebSocket connection to establish
-
-    // // Subscribe to a topic
-    // subscribeToTopic("topic/signal");
+    connectToWebSocket();
+    delay(5000); // Delay to allow WebSocket connection to establish
+    
 
     // Initialize NFC reader
     initializeNFCReader();
@@ -67,10 +38,24 @@ void loop() {
     maintainWiFiConnection();
     
     // Handle WebSocket events
-    // webSocket.loop();
+    webSocketLoop();
 
-    // Read NFC data
-    readNFCData();
+    // Check if signalFlag has changed
+    if (signalFlag != previousSignalFlag) {
+        Serial.println("Signal: " + String(signalFlag));
+        previousSignalFlag = signalFlag; // Update previous state
 
+        // Output Scan your card when true
+        if(signalFlag) {
+          Serial.println("Reader ONLINE");
+          Serial.println("Scan your RFID card...");
+        } else {
+          Serial.println("Reader OFFLINE");
+        }
+    }
 
+    // Print NFC data only if the signalFlag has changed and is True
+    if (signalFlag) {
+        readNFCData();
+    }
 }

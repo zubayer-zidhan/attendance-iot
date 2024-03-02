@@ -1,3 +1,4 @@
+#include "ESP8266WiFiType.h"
 #ifndef WIFI_MANAGER_H
 #define WIFI_MANAGER_H
 
@@ -9,6 +10,7 @@ void initializeWiFi() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
 
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
