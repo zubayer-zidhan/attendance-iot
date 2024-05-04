@@ -31,12 +31,12 @@ public:
 
       // Send the POST request
       int httpResponseCode = http.POST(requestBody); // Send POST request with request body
-      if (httpResponseCode > 0) {
+      if (httpResponseCode == 200 || httpResponseCode == 400) {
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
 
         String payload = http.getString();
-        Serial.println("Response payload:");
+        Serial.print("Response payload: ");
         Serial.println(payload);
       } else {
         Serial.print("HTTP Error: ");

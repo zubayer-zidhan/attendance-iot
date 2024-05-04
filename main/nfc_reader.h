@@ -1,7 +1,6 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include "http_client.h"
-#include "uid_roll_map.h"
 
 #include <unordered_map>
 #include <string>
@@ -32,22 +31,9 @@ void readNFCData() {
     }
     Serial.println(uid);
 
-    // Convert uid String to std::string
-    std::string uidStdString = uid.c_str();
 
-    // Check if UID exists in the mapping
-    auto it = uidToRollNumberMap.find(uidStdString);
-    if (it != uidToRollNumberMap.end()) {
-      // Print corresponding roll number
-      String rollNumber = it->second.c_str();
-      Serial.print("Roll number: ");
-      Serial.println(rollNumber);
-
-      // Send attendance data to server
-      // httpClient.sendAttendanceDataToServer(rollNumber);
-    } else {
-      Serial.println("Roll number not found for this UID");
-    }
+    // Send attendance data to server
+    httpClient.sendAttendanceDataToServer(uid);
 
     // Halt PICC
     mfrc522.PICC_HaltA();

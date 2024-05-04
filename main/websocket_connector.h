@@ -48,10 +48,6 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
                   int endIndex = text.indexOf("\\\"}", startIndex);
                   String message = text.substring(startIndex, endIndex);
 
-                  // USE_SERIAL.println("#####Start Index: " + String(startIndex));
-                  // USE_SERIAL.println("#####End Index: " + String(endIndex));
-                  // USE_SERIAL.println("#####Index of 'message': " + String(text.indexOf("{\\\"message\\\":")));
-                  // USE_SERIAL.println("#####Index of '}': " + String(text.indexOf("\\\"}")));
                   Serial.println("#####Message: " + message);
 
                   // Set flag based on the message
